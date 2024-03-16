@@ -56,14 +56,23 @@ app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
 
-app.use('/read/username/:uname', addMsgToRequest);
-
-app.get('/read/username/:uname', (req, res) => {
-  let uname = req.params.uname;
-  
-  let user =  req.users.filter(function (user) {
-    user.username = uname;
+app.use('/read/username', addMsgToRequest);
+app.get('/read/username/:input', (req, res) => {
+  let name = req.params.input;
+  let user_name = req.users.filter(function(user) {
+    return user.username === name;
   });
-
-  res.send(user);
+  console.log(user_name);
+  if(user_name.length === 0 ) {
+    res.send({
+      error:{ message: `${name} not found`, status: 400}
+    });
+  }
+  else{
+    res.send(user_name);  
+  }
 });
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
